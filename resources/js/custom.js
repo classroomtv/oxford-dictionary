@@ -77,6 +77,29 @@ function parseResult(word, res) {
 }
 
 $(document).ready(function(){
+
+    //Suggest autocomplete words
+    $('input#word.typeahead').typeahead({
+      minLength: 3,
+	    source:  function (query, process) {
+        var lang = $('#lang').val();
+        var res = [];
+        return $.post( "suggest.php", {lang: lang, word: query}, function (data) {
+        		data = $.parseJSON(data);
+
+            if(data.hasOwnProperty('results')) {
+              $.each(data.results, function(i, result) {
+                console.log(result.word);
+                res.push(result.word);
+              });
+            }
+
+	          return process(res);
+	        });
+	    }
+	});
+
+    //Search word
     $("#word-search").submit(function(e){
 
       e.preventDefault();

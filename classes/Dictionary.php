@@ -12,15 +12,30 @@ class Dictionary {
     $this->url = $url;
   }
 
+  // Search for entries in the dictionary
   public function search($lang, $word) {
 
-    $curl = curl_init();
+    $url = $this->url.'/entries/'.$lang.'/'.rawurlencode($word);
 
-    $url = $this->url.'/entries/'.$lang.'/'.$word;
+    echo $this->requestAPI($url);
+
+  }
+
+  //Suggest autocomplete words
+  public function suggest($lang, $word, $limit=10) {
+
+    $url = $this->url.'/search/'.$lang.'?q='.rawurlencode($word).'&prefix=true&limit='.$limit;
+
+    echo $this->requestAPI($url);
+
+  }
+
+  private function requestAPI($url) {
+    $curl = curl_init();
 
     curl_setopt_array($curl, array(
       CURLOPT_URL => $url,
-      CURLOPT_SSL_VERIFYPEER => false, // Need to disable SSL verification on localhost test machine
+      CURLOPT_SSL_VERIFYPEER => false, // Need to disable SSL verification on localhost test machine (Server configuration)
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => "",
       CURLOPT_MAXREDIRS => 10,
@@ -40,20 +55,24 @@ class Dictionary {
     if ($err) {
       $error = array('error' => "cURL Error #:" . $err);
 
-      echo json_encode($error);
+      curl_close($curl);
+
+      return json_encode($error);
     } else {
 
       if(curl_getinfo($curl, CURLINFO_HTTP_CODE) == 404) { // Word not found for specific language
         $error = array('error' => "Not entry available for '".$word."' in '".$lang."'");
 
-        echo json_encode($error);
+        curl_close($curl);
+
+        return json_encode($error);
       } else {
-        echo $response;
+
+        curl_close($curl);
+
+        return $response;
       }
     }
-
-    curl_close($curl);
-
   }
 
 }

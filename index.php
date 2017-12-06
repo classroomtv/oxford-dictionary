@@ -27,7 +27,7 @@
             <div class="col-9">
               <div class="form-group">
                 <label for="word">Word</label>
-                <input type="text" class="form-control" id="word" name="word" aria-describedby="wordHelp" placeholder="Enter word">
+                <input type="text" class="form-control typeahead" id="word" name="word" aria-describedby="wordHelp" placeholder="Enter word" data-provide="typeahead" autocomplete="off">
                 <small id="wordHelp" class="form-text text-muted">Type a word below to search for results.</small>
               </div>
             </div>
@@ -63,6 +63,7 @@
     <!-- Popper JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
     <script src="resources/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
     <script src="resources/js/custom.js"></script>
   </body>
 </html>
